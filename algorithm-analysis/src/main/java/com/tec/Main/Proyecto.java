@@ -151,34 +151,39 @@ public class Proyecto {
                 }
             };
         Scanner scanner = new Scanner(System.in);
-        int optio;
-        // Títulos de las opciones del menú
-        String[] titles = {
-            "Salir",
-            "Resolver sudoku de 17",
-            "Resolver sudoku de 34",
-            "Resolver sudoku de 51",
-            "Resolver sudoku de 68",
-            "Resolver sudoku"
-        };  
-        // Mostrar las opciones del menú al usuario
-        System.out.println("Ingrese una opcion:");
-        for (int i = 0; i < titles.length; i++) {
-            System.out.println(i + ". " + titles[i]);
+        while (true){
+
+        
+            int optio;
+            // Títulos de las opciones del menú
+            String[] titles = {
+                "Salir",
+                "Resolver sudoku de 17",
+                "Resolver sudoku de 34",
+                "Resolver sudoku de 51",
+                "Resolver sudoku de 68",
+                "Resolver sudoku"
+            };  
+            // Mostrar las opciones del menú al usuario
+            System.out.println("Ingrese una opcion:");
+            for (int i = 0; i < titles.length; i++) {
+                System.out.println(i + ". " + titles[i]);
+            }
+            optio = scanner.nextInt();
+            if (optio >= 1 && optio <= 5) {
+                // Selecciona el tablero de Sudoku correspondiente según la opción del usuario
+                int[][] selectedBoard = boards[optio - 1];
+                return selectedBoard;
+            }
+            if (optio == 0){
+                System.exit(0);
+            }
+            else {
+                System.err.println("INGRESE UNA OPCIÓN VÁLIDA!");
+                continue;
+            }
         }
-        optio = scanner.nextInt();
-        if (optio >= 1 && optio <= 5) {
-            // Selecciona el tablero de Sudoku correspondiente según la opción del usuario
-            int[][] selectedBoard = boards[optio - 1];
-            return selectedBoard;
-        }
-        if (optio == 0){
-            return null;
-        }
-        else {
-            System.err.println("INGRESE UNA OPCIÓN VÁLIDA!");
-        }
-        return null;
+    
 
    }
   

@@ -1,12 +1,12 @@
 package com.tec.restrictionPropagation;
-
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import com.tec.restrictionPropagation.Pair;
-import static com.tec.Main.Proyecto.contadorAsignaciones;   
-import static com.tec.Main.Proyecto.contadorComparaciones;
+//import com.tec.restrictionPropagation.Pair;  
+
 public class restrictionPropagation {
-    
+    public static int contadorAsignaciones = 0;
+    public static int contadorComparaciones = 0;
 
 /**
  * La función comprueba si un número determinado es válido para colocarse en un tablero de Sudoku en
@@ -167,13 +167,40 @@ public class restrictionPropagation {
                         }
                     }
                     contadorAsignaciones++;//Asignacion de la variable possibleSolutions
-                    possibleSolutions.add(new Pair(row, column, possibleSolutionList, possibleSolutionList.size()));
+                    if (possibleSolutionList.size() == 1){
+                        contadorAsignaciones++;//Asignacion de clase pair
+                        contadorAsignaciones++;//Asignacion de row
+                        contadorAsignaciones++;//Asignacion column
+                        contadorAsignaciones++;//Asignacion possibleSolutionList
+                        contadorAsignaciones++;//Asignacion possibleSolutionList.size()
+
+                        possibleSolutions.add(new Pair(row, column, possibleSolutionList, possibleSolutionList.size()));
+                    }
+                    
                 }
             }
         }
         contadorAsignaciones++;//return
         return possibleSolutions;
     }
+    public static int getSolutionsSize(List<Pair> possibleSolutions){
+        int totalSolutions = 0; contadorAsignaciones++;
+        contadorAsignaciones++;//Asignacion de la variable pair
+        contadorComparaciones++;//Comparacion falsa
+        for (Pair pair : possibleSolutions) {
+            contadorComparaciones++;//Comparacion verdadera
+            contadorComparaciones++;//Comparacion falsa
+            if (pair.amountSolutions == 1) {
+                contadorComparaciones++;//Comparacion verdadera
+                contadorAsignaciones++;//Asignacion de la variable totalSolutions
+                totalSolutions++;
+            }
+            
+        }
+        contadorAsignaciones++;//return
+        return totalSolutions;
+    }
+
 
 /**
  * La función "agregarSoluciones" toma una lista de pares que representan posibles soluciones para cada
@@ -185,24 +212,33 @@ public class restrictionPropagation {
  * matriz representa una celda del tablero y el valor del elemento representa el número de esa celda.
  * @return El método devuelve una matriz 2D de números enteros.
  */
-    public static int[][] addSolutions(List<Pair> possibleSolutions, int[][] board) {
+    public static boolean solveSudoku(int[][] board) {
         contadorAsignaciones++;//Asignacion de la variable possibleSolutions
         contadorAsignaciones++;//Asignacion de la variable board
-        contadorAsignaciones++;//Asignacion de la variable pair
+        contadorAsignaciones++;//Asignacion de la variable solutionsSize
+        List<Pair> possibleSolutions = findPossibleSolutions(board);
+        int solutionsSize = getSolutionsSize(possibleSolutions);
         contadorComparaciones++;//Comparacion falsa
-        for (Pair pair : possibleSolutions) {
-            contadorAsignaciones++;//Asignacion de la variable pair
+        while(solutionsSize != 0){
             contadorComparaciones++;//Comparacion verdadera
-           
             contadorComparaciones++;//Comparacion falsa
-            if (pair.possibleSolutions.size() == 1) {
+            contadorAsignaciones++;//Asignacion de la variable pair
+            for (Pair pair : possibleSolutions) {
                 contadorComparaciones++;//Comparacion verdadera
-                contadorAsignaciones++;//Asignacion de la variable board
+                contadorAsignaciones++;//Asignacion de board
                 board[pair.row][pair.column] = pair.possibleSolutions.get(0);
-            }
         }
-        contadorAsignaciones++;//return
-        return board;
+        contadorAsignaciones++;//Asignacion de la variable possibleSolutions
+        solutionsSize = getSolutionsSize(possibleSolutions);
+        contadorAsignaciones++;//Asignacion de la variable possibleSolutions
+        possibleSolutions = findPossibleSolutions(board);
+    }
+    contadorAsignaciones++;//return
+    if (!checkSolution(board)){
+        System.out.println("No hay solución para el Sudoku.");
+        return false;
+    }
+    return true;
     }
 /**
  * La función "printboard" imprime un tablero Sudoku de 9x9 representado por una matriz 2D.
@@ -211,7 +247,6 @@ public class restrictionPropagation {
  * tablero de Sudoku con 9 filas y 9 columnas. Cada elemento de la matriz representa un número en el
  * Sudoku.
  */
-
     public static void printBoard(int[][] board) {
         for (int row = 0; row < 9; row++) {
             for (int column = 0; column < 9; column++) {
@@ -220,65 +255,22 @@ public class restrictionPropagation {
             System.out.println();
         }
     }
-    public static int getAmountSize(List<Pair> possibleSolutions){
-
-        int totalSolutions = 0;
-        for (Pair pair : possibleSolutions) {
-            if (pair.amountSolutions == 1) {
-                totalSolutions++;
-            }
-            
-        }
-        return totalSolutions;
-    }
-/**
- * La función "solucionarSudoku" resuelve de forma recursiva un Sudoku encontrando posibles soluciones
- * para celdas vacías y agregándolas al tablero hasta encontrar una solución válida.
- * 
- * @param board El parámetro "tablero" es una matriz bidimensional que representa el tablero de
- * Sudoku. Cada elemento de la matriz representa una celda del tablero y su valor representa el número
- * de esa celda.
- * @return El método `solucionarSudoku` devuelve un valor booleano.
- */
-
-    public static boolean solveSudoku(int[][] board) {
-        contadorComparaciones++;
-
-        if (checkSolution(board)) {
-            contadorAsignaciones++;//return
-            return true;
-        } else {
-            contadorAsignaciones++;//Asignacion de la variable possibleSolutions
-            List<Pair> possibleSolutions = findPossibleSolutions(board);
-
-            contadorAsignaciones++;//Asignacion de la variable board
-            board = addSolutions(possibleSolutions, board);
-            contadorComparaciones++;//Comparacion falsa
-            if (getAmountSize(possibleSolutions) == 0){
-                contadorComparaciones++;//Comparacion verdadera
-                contadorAsignaciones++;//return
-                return false;
-            }
-            contadorAsignaciones++;//return
-            return solveSudoku(board);
-        }
-    }
-   
-
     public static void main(int[][] board) {
+        contadorAsignaciones = 0;
+        contadorComparaciones = 0;
+        long startTime = Instant.now().toEpochMilli();
 
-
-
+        //float startTime = System.nanoTime();
         if (solveSudoku(board)){
-            System.out.println("Sudoku resuelto");
+            //float endTime = System.nanoTime();
             printBoard(board);
-            System.out.println("Cantidad de asignaciones: "+contadorAsignaciones);
-            System.out.println("Cantidad de comparaciones: "+contadorComparaciones);
-        }
-        else{
-            System.out.println("No se pudo resolver el sudoku");
-        }
-
+            long endTime = Instant.now().toEpochMilli();
+            //float timeElapsed = endTime - startTime;
+            long timeElapsed = endTime - startTime;
+            System.out.println("Tiempo de ejecución en milisegundos: " + timeElapsed );
+            System.out.println("Asignaciones: " + contadorAsignaciones);
+            System.out.println("Comparaciones: " + contadorComparaciones);
+        };
         
     }
 }

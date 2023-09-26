@@ -4,7 +4,6 @@
  */
 package com.tec.backTracking;
 
-import java.text.DecimalFormat;
 import static com.tec.Main.Proyecto.empty;
 import static com.tec.Main.Proyecto.size;
 import static com.tec.Main.Proyecto.contadorComparaciones;
